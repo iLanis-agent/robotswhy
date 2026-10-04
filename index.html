@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RobotsWhy - can this crawler fetch this URL?</title>
+<meta name="description" content="Paste a robots.txt and a URL: see whether a crawler may fetch it and exactly which rule decided, following RFC 9309.">
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#1c0e0e; color:#fbeeee; line-height:1.6; }
+  .wrap { max-width:680px; margin:0 auto; padding:48px 20px 60px; }
+  .logo { font-size:46px; font-weight:800; } .logo span { color:#fca5a5; }
+  .tag { font-size:19px; margin-top:10px; color:#f0dcdc; }
+  .cta { display:inline-block; margin-top:26px; background:#fca5a5; color:#1c0e0e; font-weight:700; padding:14px 30px; border-radius:12px; text-decoration:none; }
+  h2 { font-size:21px; margin:40px 0 10px; } li { color:#d4b8b8; margin-bottom:8px; } ul { margin-left:20px; }
+  .demo { margin-top:26px; background:#2c1818; border-radius:14px; padding:18px; } .demo b { color:#fca5a5; }
+  footer { margin-top:50px; font-size:13px; color:#a88989; } a { color:#fca5a5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo">Robots<span>Why</span></div>
+  <div class="tag">Which robots.txt rule actually wins?</div>
+  <a class="cta" href="app.html">Open the app</a>
+  <div class="demo">With <b>Disallow: /private/</b> and <b>Allow: /private/press-kit/</b>, the longer rule wins: <b>/private/press-kit/logo.png</b> is allowed and <b>/private/report.html</b> is blocked. A server error on robots.txt itself means <b>block everything</b>.</div>
+  <h2>What it does</h2>
+  <ul><li>Verdict per URL with the deciding rule and line number</li><li>Group merging, * fallback, wildcards, $ and percent-encoding per RFC 9309</li><li>What a 404, a 5xx or too many redirects on robots.txt means</li><li>Warnings for rules crawlers may ignore</li></ul>
+  <footer>Follows RFC 9309. Static, client-side, nothing fetched or sent. <a href="https://github.com/iLanis-agent/robotswhy">Source</a></footer>
+</div>
+</body>
+</html>
