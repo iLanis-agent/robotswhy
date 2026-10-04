@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RobotsWhy - can this crawler fetch this URL?</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#1c0e0e; color:#fbeeee; line-height:1.5; }
+  .wrap { max-width:700px; margin:0 auto; padding:26px 16px 50px; }
+  h1 { font-size:28px; } h1 span { color:#fca5a5; }
+  .sub { color:#d6b9b9; margin:6px 0 16px; }
+  .card { background:#2c1818; border-radius:14px; padding:14px; margin-bottom:12px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  label { font-size:12px; color:#d6b9b9; display:block; margin-bottom:3px; }
+  input,select { width:100%; background:#1c0e0e; color:#fbeeee; border:1px solid #6b4444; border-radius:8px; padding:8px; font-size:15px; font-family:inherit; }
+  button { background:#b91c1c; color:#fbeeee; border:0; padding:8px 14px; border-radius:8px; cursor:pointer; font-size:14px; margin-right:6px; margin-top:10px; }
+  table { width:100%; border-collapse:collapse; } td,th { text-align:left; padding:8px 4px; border-bottom:1px solid #4a2e2e; } th { font-size:12px; color:#d6b9b9; font-weight:600; }
+  td.v { font-size:22px; font-weight:800; color:#fca5a5; } tr.me td.v { color:#fbeeee; }
+  .stats { display:flex; gap:22px; flex-wrap:wrap; margin-top:12px; } .stats b { display:block; font-size:20px; } .muted { color:#d6b9b9; font-size:13px; }
+  .err { color:#ff9c8a; } .note { font-size:12.5px; color:#a88989; margin-top:6px; }
+
+  td.v { font-size:17px; } td, th { font-size:14px; } .bar { height:10px; background:#1c0e0e; border-radius:6px; overflow:hidden; margin-top:6px; } .bar i { display:block; height:100%; background:#fca5a5; } .bar i.over { background:#ff7b72; } .no { color:#ff9c8a; }
+  .cb { display:inline-flex; align-items:center; gap:4px; margin-right:12px; font-size:14px; color:#fbeeee; } .cb input { width:auto; } .big { font-family:monospace; font-size:26px; font-weight:800; color:#fca5a5; } td.v.m { font-family:monospace; }
+  textarea { width:100%; background:#1c0e0e; color:#fbeeee; border:1px solid #6b4444; border-radius:8px; padding:8px; font-size:14px; font-family:monospace; min-height:110px; } .ok { color:#86efac; font-weight:700; } .no { color:#ff9c8a; } td.m { font-family:monospace; } .chip { display:inline-block; font-family:monospace; background:#1c0e0e; border-radius:6px; padding:2px 6px; margin:2px 4px 2px 0; }
+  textarea { width:100%; background:#1c0e0e; color:#fbeeee; border:1px solid #6b4444; border-radius:8px; padding:8px; font-size:13px; font-family:monospace; min-height:130px; } .badge { display:inline-block; font-weight:800; padding:4px 12px; border-radius:20px; background:#1c0e0e; } .bar { height:14px; background:#1c0e0e; border-radius:8px; position:relative; margin:12px 0 6px; overflow:hidden; } .bar i.f { position:absolute; left:0; top:0; bottom:0; background:#ef4444; } .bar i.n { position:absolute; top:0; bottom:0; width:3px; background:#fff; }
+  .seg { display:inline-block; height:22px; background:#ef4444; border-radius:4px; margin:2px 2px 2px 0; vertical-align:middle; } .seg.last { background:#b91c1c; } .chip { display:inline-block; font-family:monospace; background:#1c0e0e; border-radius:6px; padding:2px 8px; margin:2px 4px 2px 0; font-size:16px; }
+.res{border-top:1px solid #4a2e2e;padding:10px 0}.res code,.val{font-family:ui-monospace,Menlo,monospace;font-size:13px;word-break:break-all}.badge{display:inline-block;font-size:12px;font-weight:800;border-radius:4px;padding:2px 8px;margin-right:8px}.ok{background:#166534;color:#fff}.no{background:#b91c1c;color:#fff}.val{background:#1c0e0e;border-radius:6px;padding:6px 8px;display:block;margin:4px 0}.k{font-size:12px;color:#a88989;margin-top:6px}.warn{color:#fbbf24;font-size:13px;margin-top:4px}textarea,input,select{font-family:ui-monospace,Menlo,monospace;font-size:13px}textarea{min-height:140px}select{background:#1c0e0e;color:#fbeeee;border:1px solid #6b4444;border-radius:8px;padding:10px}.g{border-left:3px solid #6b4444;padding-left:8px;margin:6px 0}.g.on{border-color:#ef4444}</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Robots<span>Why</span></h1>
+  <div class="sub">Paste a robots.txt, name the crawler, list URLs. RobotsWhy says which are allowed, and for each one which rule decided it, following RFC 9309: matching group, wildcards, longest match wins, Allow wins ties.</div>
+  <div class="card">
+    <label>robots.txt</label>
+    <textarea id="t" spellcheck="false"></textarea>
+    <div class="grid" style="margin-top:10px"><div><label>Crawler product token</label><input id="u" value="ExampleBot" spellcheck="false"></div><div><label>What the crawler got when it fetched robots.txt</label><select id="f"><option value="ok">200 OK, use the text above</option><option value="unavailable">404 or other 4xx</option><option value="unreachable">500 or other 5xx, or unreachable</option><option value="redirects">More than 5 redirects</option></select></div></div>
+    <label style="margin-top:10px">URLs or paths to test (one per line)</label>
+    <textarea id="p" spellcheck="false" style="min-height:90px"></textarea>
+    <div><button id="s1">Allow inside a blocked folder</button><button id="s2">Wildcards and $</button><button id="s3">Two groups, same bot</button><button id="s4">Block everything</button></div>
+    <div id="err" class="err" style="margin-top:6px"></div>
+  </div>
+  <div class="card"><div id="out"></div></div>
+  <div class="note">Follows RFC 9309 (read in full): groups and merging of groups for the same product token, case-insensitive token match, case-sensitive paths, percent-encoding normalization, * and $, the most specific match wins, Allow wins a tie, /robots.txt always allowed, and the fetch results (4xx allows all, 5xx or unreachable disallows all). Where the RFC leaves a choice, this tool counts the specificity of a rule as the number of characters in the normalized rule, as Google does, including * and $. Real crawlers differ in places: some also match a product token as a prefix, some read Crawl-delay, and Google ignores rules that do not start with / or *. Match is on the path plus query string; fragments are dropped. Only product tokens are matched, not full User-Agent strings. Robots rules are a request to crawlers, not access control. Runs in your browser; nothing is fetched or sent.</div>
+</div>
+<script src="engine.js"></script>
+<script>
+(function () {
+  var R = window.RobotsWhy, $ = function (i) { return document.getElementById(i); };
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+  var S = {
+    s1: ['User-agent: *\nDisallow: /private/\nAllow: /private/press-kit/\nDisallow: /tmp\n\nSitemap: https://example.com/sitemap.xml\n', 'ExampleBot', '/private/report.html\n/private/press-kit/logo.png\n/tmp-files/a.txt\n/about\n/robots.txt'],
+    s2: ['User-agent: *\nDisallow: /*.pdf$\nDisallow: /search?*sort=\nAllow: /search?q=\nDisallow: /shop/*/cart\n', 'ExampleBot', '/files/spec.pdf\n/files/spec.pdf?download=1\n/search?q=shoes&sort=price\n/search?sort=price\n/shop/42/cart\n/shop/cart'],
+    s3: ['User-agent: ExampleBot\nDisallow: /foo\nDisallow: /bar\n\nUser-agent: ExampleBot\nDisallow: /baz\n\nUser-agent: *\nDisallow: /\n', 'ExampleBot', '/foo\n/baz/page\n/other'],
+    s4: ['User-agent: *\nDisallow: /\nAllow: /$\n', 'ExampleBot', '/\n/index.html\n/robots.txt']
+  };
+  Object.keys(S).forEach(function (k) { $(k).onclick = function () { $('t').value = S[k][0].replace(/\\n/g, '\n'); $('u').value = S[k][1]; $('p').value = S[k][2].replace(/\\n/g, '\n'); $('f').value = 'ok'; run(); }; });
+  function run() {
+    var tok = $('u').value.trim(), o = $('out'), err = $('err'); err.textContent = '';
+    if (!/^[-A-Za-z_]+$/.test(tok)) { err.textContent = 'The product token may contain only letters, underscore and hyphen, like Googlebot or ExampleBot. Use the short token from the robots.txt user-agent line, not the whole User-Agent header.'; o.innerHTML = ''; return; }
+    var urls = $('p').value.split(/\r?\n/).map(function (s) { return s.trim(); }).filter(Boolean);
+    if (!urls.length) { err.textContent = 'Add at least one URL or path to test.'; o.innerHTML = ''; return; }
+    if (urls.length > 200) { err.textContent = 'Up to 200 URLs at a time.'; o.innerHTML = ''; return; }
+    var fo = R.fetchOutcome($('f').value), h = '';
+    if (fo) {
+      h += '<div class="warn" style="font-size:14px">' + esc(fo.text) + '</div>';
+      urls.forEach(function (u) { h += '<div class="res"><span class="badge ' + (fo.allowedAll ? 'ok' : 'no') + '">' + (fo.allowedAll ? 'ALLOWED' : 'BLOCKED') + '</span><code>' + esc(u) + '</code></div>'; });
+      o.innerHTML = h; return;
+    }
+    var parsed = R.parse($('t').value), sel = R.selectGroups(parsed, tok);
+    h += '<div class="k">Group used for ' + esc(tok) + '</div>';
+    h += '<div class="muted">' + (sel.kind === 'token' ? 'Matched by product token: ' + sel.groups.length + ' group' + (sel.groups.length > 1 ? 's, merged' : '') + '.' : sel.kind === 'star' ? 'No group names this crawler, so the * group applies.' : 'No group applies, so nothing is restricted.') + '</div>';
+    sel.groups.forEach(function (g) { h += '<div class="g on"><code>user-agent: ' + esc(g.agents.join(', ')) + '</code> <span class="muted">(line ' + g.line + ', ' + g.rules.length + ' rule' + (g.rules.length === 1 ? '' : 's') + ')</span></div>'; });
+    parsed.warnings.forEach(function (w) { h += '<div class="warn">' + esc(w) + '</div>'; });
+    urls.forEach(function (u) {
+      var r = R.check(parsed, tok, u);
+      h += '<div class="res"><span class="badge ' + (r.allowed ? 'ok' : 'no') + '">' + (r.allowed ? 'ALLOWED' : 'BLOCKED') + '</span><code>' + esc(r.path) + '</code><div class="muted" style="margin-top:4px">' + esc(r.reason) + '</div>';
+      if (r.matches.length > 1) h += '<div class="k">All rules that match</div>' + r.matches.map(function (m) { return '<span class="val">' + esc(m.type === 'allow' ? 'Allow' : 'Disallow') + ': ' + esc(m.raw) + '  (line ' + m.line + ', ' + m.length + ' characters)' + (m === r.deciding ? '  <- decides' : '') + '</span>'; }).join('');
+      h += '</div>';
+    });
+    o.innerHTML = h;
+  }
+  ['t', 'u', 'p'].forEach(function (i) { $(i).oninput = run; }); $('f').onchange = run;
+  $('s1').onclick();
+})();
+</script>
+</body>
+</html>
